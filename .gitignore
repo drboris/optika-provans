@@ -5,6 +5,9 @@
 log.txt
 *.log
 
+# Локальные превью/скриншоты для проверки вёрстки
+.preview/
+
 # Системный мусор Windows / macOS
 Thumbs.db
 desktop.ini
