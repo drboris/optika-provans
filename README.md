@@ -3,6 +3,9 @@
 Одностраничный сайт салона оптики «Прованс». Чистый HTML/CSS/JS в одном файле,
 без сборки и зависимостей — всё лежит рядом с разметкой.
 
+- Репозиторий: <https://github.com/drboris/optika-provans>
+- Живой сайт: <https://drboris.github.io/optika-provans/>
+
 ## Быстрый старт
 
 Открыть файл `index.html` двойным кликом в браузере. Всё работает локально,
@@ -31,19 +34,22 @@ python -m http.server 8000
 
 ## Публикация на GitHub Pages
 
-1. В настройках репозитория: **Settings → Pages**.
-2. Source: **Deploy from a branch**, Branch: `main`, папка `/ (root)`.
-3. Сайт будет доступен по адресу `https://<логин>.github.io/<репозиторий>/`.
+Уже включено: **Settings → Pages**, ветка `main`, папка `/ (root)`.
+Любой `git push` в `main` пересобирает сайт за минуту.
 
-Для этого главный файл должен называться `index.html` (GitHub Pages ищет именно его).
+Если нужно переехать на другой аккаунт — главный файл должен называться `index.html`
+(GitHub Pages ищет именно его).
 
 ## Работа с другого компьютера
 
 ```powershell
-git clone https://github.com/<логин>/<репозиторий>.git
-cd <репозиторий>
+git clone https://github.com/drboris/optika-provans.git
+cd optika-provans
 # правим, затем:
 git add -A
 git commit -m "описание правки"
 git push
 ```
+
+При первом `push` на новой машине Git Credential Manager откроет браузер
+и попросит войти в GitHub — пароль в командах вводить не нужно.
