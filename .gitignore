@@ -1,0 +1,11 @@
+# Служебная папка GigaTool (node_modules ~50 МБ, конфиги инструмента)
+.gigatool/
+
+# Логи и журналы правок
+log.txt
+*.log
+
+# Системный мусор Windows / macOS
+Thumbs.db
+desktop.ini
+.DS_Store

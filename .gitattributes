@@ -1,0 +1,9 @@
+# Единый перевод строк в репозитории — чтобы не было шума при работе с разных машин
+* text=auto eol=lf
+
+# Бинарные файлы не трогаем
+*.jpg binary
+*.png binary
+*.ico binary
+*.woff2 binary
+*.otf binary
