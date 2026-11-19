@@ -93,7 +93,7 @@
   .logo .logo-text{display:flex; flex-direction:column;}
   .logo .logo-name{
     font-family:var(--display); font-weight:normal; font-size:28px; color:var(--ink);
-    letter-spacing:.02em; line-height:1;
+    letter-spacing:.05em; line-height:1;
   }
   .logo .logo-tag{
     font-family:var(--serif); font-style:italic; font-weight:400; font-size:16px;
@@ -224,19 +224,34 @@
   .catalog-details li::before{content:'—'; position:absolute; left:0; color:var(--plum);}
   .catalog-details h4{font-family:var(--sans); font-size:12px; letter-spacing:.08em; text-transform:uppercase; color:var(--sage-text); margin:12px 0 0; text-align:center;}
   .catalog-details h4:first-child{margin-top:0;}
-  .catalog-details .catalog-more{
+  .catalog-more{
     margin-top:20px; text-align:center;
     opacity:0; transform:translateY(4px); pointer-events:none;
     transition:opacity .25s ease, transform .25s ease;
   }
-  .catalog-card:hover .catalog-details .catalog-more{
+  .catalog-card:hover .catalog-more{
     opacity:1; transform:translateY(0); pointer-events:auto;
   }
   .catalog-card.open{background:var(--lavender-wash); border-color:var(--plum);}
   /* На тач-устройствах :hover нет — кнопку в карточке каталога показываем всегда */
-  @media (hover:none){ .catalog-details .catalog-more{opacity:1; transform:none; pointer-events:auto;} }
+  @media (hover:none){ .catalog-more{opacity:1; transform:none; pointer-events:auto;} }
   .catalog-note{margin-top:28px; font-size:14px; color:#5a6870;}
   .catalog-note a{color:var(--sage-text); text-decoration:underline; text-underline-offset:3px;}
+
+  /* Сворачивание деталей каталога — только на мобильных (до 768px) */
+  .catalog-toggle{display:none;}
+  @media (max-width:768px){
+    .catalog-toggle{
+      display:inline-flex; align-items:center; gap:8px; margin-top:18px;
+      font-family:var(--sans); font-size:14px; font-weight:600; color:var(--ink);
+      background:var(--paper-raised); border:1px solid var(--line-strong); border-radius:10px;
+      padding:10px 18px; cursor:pointer;
+    }
+    .catalog-toggle::after{content:'↓'; line-height:1; transition:transform .2s ease;}
+    .catalog-card.open .catalog-toggle::after{transform:rotate(180deg);}
+    .catalog-details{display:none; margin-top:22px;}
+    .catalog-card.open .catalog-details{display:block;}
+  }
 
   /* ---------- SPECIALIST ---------- */
   .specialist-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:36px;}
@@ -261,8 +276,8 @@
   /* ---------- REVIEWS ---------- */
   .reviews{background:var(--sage-dim);}
   .review-slider{position:relative; max-width:760px; margin:0 auto;}
-  .review-track{overflow:hidden; border-radius:4px;}
-  .review-slides{display:flex; transition:transform .55s ease;}
+  .review-track{overflow:hidden; border-radius:4px; transition:height .4s ease;}
+  .review-slides{display:flex; align-items:flex-start; transition:transform .55s ease;}
   .review-card{
     min-width:100%; box-sizing:border-box;
     background:var(--paper-raised); padding:36px 40px; border-radius:4px; border:1px solid var(--line);
@@ -281,7 +296,7 @@
   .rev-arrow:hover{background:var(--lavender-wash); border-color:var(--plum);}
   .rev-prev{left:-20px;}
   .rev-next{right:-20px;}
-  @media(max-width:680px){ .rev-prev{left:-6px;} .rev-next{right:-6px;} }
+  @media(max-width:680px){ .rev-arrow{display:none;} }
   .rev-dots{display:flex; justify-content:center; gap:2px; margin-top:22px;}
   .rev-dot{width:24px; height:24px; padding:0; border:none; background:transparent; cursor:pointer; position:relative;}
   .rev-dot::after{content:''; position:absolute; inset:8px; border-radius:50%; background:var(--line-strong); transition:background .2s ease, transform .2s ease;}
@@ -296,16 +311,11 @@
   .contact-info dd{font-size:16px; margin-top:4px;}
   .map-block{
     margin-top:32px; aspect-ratio:16/10; border-radius:4px; border:1px solid var(--line);
-    background:
-      linear-gradient(var(--line) 1px, transparent 1px) 0 0/28px 28px,
-      linear-gradient(90deg, var(--line) 1px, transparent 1px) 0 0/28px 28px,
-      var(--paper-raised);
-    position:relative;
+    overflow:hidden; background:var(--paper-raised);
   }
-  .map-pin{
-    position:absolute; top:44%; left:52%; width:16px; height:16px; border-radius:50% 50% 50% 0;
-    background:var(--plum); transform:rotate(-45deg) translate(-50%,-50%);
-  }
+  .map-block iframe{width:100%; height:100%; border:0; display:block;}
+  .map-note{margin-top:12px; font-size:13.5px;}
+  .map-note a{color:var(--sage-text); text-decoration:underline; text-underline-offset:3px;}
   .form-note{font-size:12.5px; color:#5A646A; margin-top:2px;}
 
   /* ---------- FOOTER ---------- */
@@ -447,7 +457,8 @@
         <svg width="52" height="52" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="2.4"/></svg>
         <h3>Однофокальные HI-LUX / NU-LUX</h3>
         <p class="catalog-desc">Классическая коррекция для дали или близи. Сферические (HI-LUX) и асферические (NU-LUX) — тонкий профиль, меньше искажений по краю.</p>
-        <div class="catalog-details">
+        <button class="catalog-toggle" type="button" aria-expanded="false" aria-controls="cat-1">Подробнее</button>
+        <div class="catalog-details" id="cat-1">
           <h4>Для кого</h4>
           <ul>
             <li>Молодёжь и взрослые с близорукостью или дальнозоркостью</li>
@@ -465,15 +476,15 @@
             <li>Hi-Vision LongLife — суперпрочное, водо- и грязеотталкивающее</li>
             <li>HVLL BlueControl — защита от синего света экранов</li>
           </ul>
-          <p class="catalog-more"><a class="btn btn-primary" href="https://dikidi.net/1860424" target="_blank" rel="noopener">Записаться на подбор</a></p>
         </div>
-        
+        <p class="catalog-more"><a class="btn btn-primary" href="https://dikidi.net/1860424" target="_blank" rel="noopener">Записаться на подбор</a></p>
       </div>
       <div class="catalog-card" data-details>
         <svg width="52" height="52" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3"><circle cx="12" cy="12" r="8"/><path d="M4 9.5h16M4 14.5h16"/></svg>
         <h3>Прогрессивные HOYALUX iD</h3>
         <p class="catalog-desc">Одна линза для всех расстояний. Линейки: <strong>iD MySelf</strong> — максимум комфорта, <strong>iD LifeStyle 3</strong> — для активного образа жизни, <strong>Dynamic</strong> и <strong>Balance</strong> на любой бюджет.</p>
-        <div class="catalog-details">
+        <button class="catalog-toggle" type="button" aria-expanded="false" aria-controls="cat-2">Подробнее</button>
+        <div class="catalog-details" id="cat-2">
           <h4>Для кого</h4>
           <ul>
             <li>Когда нужно чётко видеть и вдаль, и вблизи — одна пара очков на все случаи</li>
@@ -491,15 +502,15 @@
             <li>Полимер 1.5 / 1.6 / 1.67 / супер-тонкий 1.74</li>
             <li>Индивидуальный расчёт под вашу посадку оправы</li>
           </ul>
-          <p class="catalog-more"><a class="btn btn-primary" href="https://dikidi.net/1860424" target="_blank" rel="noopener">Записаться на подбор</a></p>
         </div>
-        
+        <p class="catalog-more"><a class="btn btn-primary" href="https://dikidi.net/1860424" target="_blank" rel="noopener">Записаться на подбор</a></p>
       </div>
       <div class="catalog-card" data-details>
         <svg width="52" height="52" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3"><circle cx="12" cy="12" r="6"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M19.1 4.9L17 7M7 17l-2.1 2.1"/></svg>
         <h3>Фотохромные SENSITY</h3>
         <p class="catalog-desc">Сами темнеют на солнце и светлеют в помещении. Sensity 2 — затемняются даже за лобовым стеклом. Без второй пары очков.</p>
-        <div class="catalog-details">
+        <button class="catalog-toggle" type="button" aria-expanded="false" aria-controls="cat-3">Подробнее</button>
+        <div class="catalog-details" id="cat-3">
           <h4>Для кого</h4>
           <ul>
             <li>Кто много времени проводит на улице и в помещении</li>
@@ -519,15 +530,15 @@
           <ul>
             <li>Полимер 1.5 / 1.6 / 1.67</li>
           </ul>
-          <p class="catalog-more"><a class="btn btn-primary" href="https://dikidi.net/1860424" target="_blank" rel="noopener">Записаться на подбор</a></p>
         </div>
-        
+        <p class="catalog-more"><a class="btn btn-primary" href="https://dikidi.net/1860424" target="_blank" rel="noopener">Записаться на подбор</a></p>
       </div>
       <div class="catalog-card" data-details>
         <svg width="52" height="52" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="2.1"/><circle cx="12" cy="5.5" r="1.2"/><circle cx="12" cy="18.5" r="1.2"/><circle cx="5.5" cy="12" r="1.2"/><circle cx="18.5" cy="12" r="1.2"/><circle cx="7.4" cy="7.4" r="1.2"/><circle cx="16.6" cy="16.6" r="1.2"/><circle cx="7.4" cy="16.6" r="1.2"/><circle cx="16.6" cy="7.4" r="1.2"/></svg>
         <h3>Детские MiYOSMART</h3>
         <p class="catalog-desc">Линзы для контроля близорукости у детей, вся линейка в наличии. Технология D.I.M.S. замедляет прогрессирование миопии в среднем на 60% — от базовой версии до нового поколения iQ.</p>
-        <div class="catalog-details">
+        <button class="catalog-toggle" type="button" aria-expanded="false" aria-controls="cat-4">Подробнее</button>
+        <div class="catalog-details" id="cat-4">
           <h4>Для кого</h4>
           <ul>
             <li>Детям и подросткам с прогрессирующей близорукостью</li>
@@ -549,9 +560,8 @@
             <li>Дизайны iQ и iQ TF (асферический — тоньше по краю)</li>
             <li>Покрытия Hi-Vision и UV на выбор</li>
           </ul>
-          <p class="catalog-more"><a class="btn btn-primary" href="https://dikidi.net/1860424" target="_blank" rel="noopener">Записаться на подбор</a></p>
         </div>
-        
+        <p class="catalog-more"><a class="btn btn-primary" href="https://dikidi.net/1860424" target="_blank" rel="noopener">Записаться на подбор</a></p>
       </div>
     </div>
     <p class="catalog-note">Позвоните — расскажем, какая линейка Hoya подойдёт под ваш рецепт и бюджет. <a href="tel:+79152545359">Позвонить в магазин →</a></p>
@@ -684,9 +694,12 @@
           <dd><a href="tel:+79152545359">+7 (915) 254-53-59</a></dd>
         </div>
       </dl>
-      <div class="map-block" role="img" aria-label="Схематичная карта расположения магазина">
-        <div class="map-pin"></div>
+      <div class="map-block">
+        <iframe src="https://yandex.ru/map-widget/v1/?ll=37.270428%2C55.834285&z=17&pt=37.270428,55.834285,pm2rdm&lang=ru_RU"
+                title="Карта: салон оптики «Прованс», Красногорск, бульвар Космонавтов, 1"
+                loading="lazy" allowfullscreen referrerpolicy="no-referrer-when-downgrade"></iframe>
       </div>
+      <p class="map-note"><a href="https://yandex.ru/maps/?rtext=~55.834285%2C37.270428&rtt=auto" target="_blank" rel="noopener">Построить маршрут в Яндекс.Картах →</a></p>
     </div>
     <div>
       <span class="eyebrow">Запись на приём</span>
@@ -742,11 +755,18 @@
   });
   var dots = dotsWrap.querySelectorAll('.rev-dot');
 
+  var track = document.querySelector('.review-track');
+  function setTrackHeight(){
+    if(track && cards[index]) track.style.height = cards[index].offsetHeight + 'px';
+  }
   function go(i){
     index = (i + cards.length) % cards.length;
     slides.style.transform = 'translateX(-' + (index * 100) + '%)';
     dots.forEach(function(d, di){ d.classList.toggle('active', di === index); });
+    setTrackHeight();
   }
+  window.addEventListener('resize', setTrackHeight);
+  window.addEventListener('load', setTrackHeight);
   function next(){ go(index + 1); }
   function restart(){
     if(timer) clearInterval(timer);
@@ -774,6 +794,17 @@
     if(Math.abs(dx) > 40){ dx < 0 ? next() : go(index - 1); restart(); }
   }, {passive:true});
 
+  // Каталог: разворачивание деталей на мобильных
+  document.querySelectorAll('.catalog-toggle').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var card = btn.closest('.catalog-card');
+      var open = card.classList.toggle('open');
+      btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+      btn.textContent = open ? 'Свернуть' : 'Подробнее';
+    });
+  });
+
+  go(0);
   restart();
 })();
 </script>
